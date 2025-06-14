@@ -142,30 +142,27 @@ function cleanUpTempSheets() {
   for (const sheet of sheets) {
     const name = sheet.getName();
     if (name.startsWith("Temp_")) {
-      const parts = name.split("_");
-      if (parts.length === 4) {
+      const parts = name.split("_"); // ["Temp", "Technika", "20250614", "215459"]
+      if (parts.length === 4 || parts.length === 5) {
         const dateStr = parts[2];
         const timeStr = parts[3];
 
-        // Попробуем собрать корректный формат
-        try {
+        if (dateStr.length === 8 && timeStr.length === 6) {
           const sheetTime = new Date(
-            `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(
-              6,
-              8
-            )}T` +
-              `${timeStr.slice(0, 2)}:${timeStr.slice(2, 4)}:${timeStr.slice(
-                4,
-                6
-              )}`
+            `${dateStr.substring(0, 4)}-${dateStr.substring(
+              4,
+              6
+            )}-${dateStr.substring(6, 8)}T` +
+              `${timeStr.substring(0, 2)}:${timeStr.substring(
+                2,
+                4
+              )}:${timeStr.substring(4, 6)}`
           );
 
-          const ageMinutes = (now - sheetTime) / 1000 / 60;
+          const ageMinutes = (now.getTime() - sheetTime.getTime()) / 1000 / 60;
           if (ageMinutes > 120) {
             ss.deleteSheet(sheet);
           }
-        } catch (e) {
-          console.warn(`Ошибка при парсинге даты из названия листа: ${name}`);
         }
       }
     }
