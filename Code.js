@@ -23,7 +23,7 @@ function getDropdownOptions(sheetName) {
 }
 
 function include(filename) {
-  return HtmlService.createHtmlOutputFromFile(filename).getContent();
+  return HtmlService.createHtmlOutputFromFile(filename).getRawContent();
 }
 
 function getRulesText(sheetName) {
