@@ -43,7 +43,6 @@ function doGet(e) {
       template.baseUrl = ScriptApp.getService().getUrl();
       break;
 
-    // Эти можно оставить, если нужны отдельные страницы с правилами
     case "rules_technika":
       template = HtmlService.createTemplateFromFile("RulesTechnika");
       template.title = "Правила техники";
@@ -66,11 +65,14 @@ function doGet(e) {
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
+// Новый подход: временные копии
 function processForm(formData) {
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(
-    "Калькулятор техники"
-  );
-  if (!sheet) throw new Error('Лист "Калькулятор техники" не найден!');
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const baseSheet = ss.getSheetByName("Калькулятор техники");
+  if (!baseSheet) throw new Error('Лист "Калькулятор техники" не найден!');
+
+  const tempSheet = baseSheet.copyTo(ss);
+  tempSheet.setName("Temp_Technika_" + new Date().getTime());
 
   const values = [
     formData.condition,
@@ -82,19 +84,24 @@ function processForm(formData) {
   ];
 
   for (let i = 0; i < values.length; i++) {
-    sheet.getRange(`C${i + 2}`).setValue(values[i]);
+    tempSheet.getRange(`C${i + 2}`).setValue(values[i]);
   }
 
   SpreadsheetApp.flush();
-  return `Сумма кредита: ${sheet.getRange("C8").getDisplayValue()} грн`;
+  const result = tempSheet.getRange("C8").getDisplayValue();
+
+  ss.deleteSheet(tempSheet); // удалить после расчёта
+
+  return `Сумма кредита: ${result} грн`;
 }
 
 function processFormMetall(formData) {
-  const sheet =
-    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(
-      "Калькулятор металл"
-    );
-  if (!sheet) throw new Error('Лист "Калькулятор металл" не найден!');
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const baseSheet = ss.getSheetByName("Калькулятор металл");
+  if (!baseSheet) throw new Error('Лист "Калькулятор металл" не найден!');
+
+  const tempSheet = baseSheet.copyTo(ss);
+  tempSheet.setName("Temp_Metall_" + new Date().getTime());
 
   const values = [
     formData.metalType,
@@ -107,9 +114,13 @@ function processFormMetall(formData) {
   ];
 
   for (let i = 0; i < values.length; i++) {
-    sheet.getRange(`C${i + 2}`).setValue(values[i]);
+    tempSheet.getRange(`C${i + 2}`).setValue(values[i]);
   }
 
   SpreadsheetApp.flush();
-  return `Сумма кредита: ${sheet.getRange("C10").getDisplayValue()} грн`;
+  const result = tempSheet.getRange("C10").getDisplayValue();
+
+  ss.deleteSheet(tempSheet); // удалить после расчёта
+
+  return `Сумма кредита: ${result} грн`;
 }
