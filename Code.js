@@ -124,3 +124,35 @@ function processFormMetall(formData) {
 
   return `Сумма кредита: ${result} грн`;
 }
+
+function cleanUpTempSheets() {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheets = ss.getSheets();
+  const now = new Date();
+
+  for (const sheet of sheets) {
+    const name = sheet.getName();
+    if (name.startsWith("Temp_")) {
+      const parts = name.split("_");
+      if (parts.length === 4) {
+        const dateStr = parts[2];
+        const timeStr = parts[3];
+        const sheetTime = new Date(
+          `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(
+            6,
+            8
+          )}T` +
+            `${timeStr.slice(0, 2)}:${timeStr.slice(2, 4)}:${timeStr.slice(
+              4,
+              6
+            )}`
+        );
+
+        const ageMinutes = (now - sheetTime) / 1000 / 60;
+        if (ageMinutes > 60) {
+          ss.deleteSheet(sheet);
+        }
+      }
+    }
+  }
+}
