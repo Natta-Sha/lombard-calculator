@@ -143,22 +143,29 @@ function cleanUpTempSheets() {
     const name = sheet.getName();
     if (name.startsWith("Temp_")) {
       const parts = name.split("_");
-      if (parts.length === 3) {
-        const dateStr = parts[2]; // YYYYMMDDHHMMSS
-        const sheetTime = new Date(
-          `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(
-            6,
-            8
-          )}T` +
-            `${dateStr.slice(9, 11)}:${dateStr.slice(11, 13)}:${dateStr.slice(
-              13,
-              15
-            )}`
-        );
+      if (parts.length === 4) {
+        const dateStr = parts[2];
+        const timeStr = parts[3];
 
-        const ageMinutes = (now - sheetTime) / 1000 / 60;
-        if (ageMinutes > 120) {
-          ss.deleteSheet(sheet);
+        // Попробуем собрать корректный формат
+        try {
+          const sheetTime = new Date(
+            `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(
+              6,
+              8
+            )}T` +
+              `${timeStr.slice(0, 2)}:${timeStr.slice(2, 4)}:${timeStr.slice(
+                4,
+                6
+              )}`
+          );
+
+          const ageMinutes = (now - sheetTime) / 1000 / 60;
+          if (ageMinutes > 120) {
+            ss.deleteSheet(sheet);
+          }
+        } catch (e) {
+          console.warn(`Ошибка при парсинге даты из названия листа: ${name}`);
         }
       }
     }
