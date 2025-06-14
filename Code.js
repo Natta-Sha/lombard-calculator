@@ -26,14 +26,6 @@ function include(filename) {
   return HtmlService.createHtmlOutputFromFile(filename).getContent();
 }
 
-function getRulesText(sheetName) {
-  const sheet =
-    SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(sheetName);
-  if (!sheet) throw new Error(`Лист "${sheetName}" не найден`);
-  const values = sheet.getDataRange().getDisplayValues();
-  return values.map((row) => row.join(" ")).join("<br>");
-}
-
 function doGet(e) {
   const page = (e.parameter.page || "main").toLowerCase();
   let template;
@@ -44,23 +36,26 @@ function doGet(e) {
       template.data = getDropdownOptions("Служебный техника");
       template.baseUrl = ScriptApp.getService().getUrl();
       break;
+
     case "metall":
       template = HtmlService.createTemplateFromFile("FormMetall");
       template.data = getDropdownOptions("Служебный металл");
       template.baseUrl = ScriptApp.getService().getUrl();
       break;
+
+    // Эти можно оставить, если нужны отдельные страницы с правилами
     case "rules_technika":
-      template = HtmlService.createTemplateFromFile("Rules");
-      template.rulesText = getRulesText("Правила техника");
+      template = HtmlService.createTemplateFromFile("RulesTechnika");
       template.title = "Правила техники";
       template.baseUrl = ScriptApp.getService().getUrl();
       break;
+
     case "rules_metall":
-      template = HtmlService.createTemplateFromFile("Rules");
-      template.rulesText = getRulesText("Правила металл");
+      template = HtmlService.createTemplateFromFile("RulesMetall");
       template.title = "Правила металла";
       template.baseUrl = ScriptApp.getService().getUrl();
       break;
+
     default:
       template = HtmlService.createTemplateFromFile("Main");
       template.baseUrl = ScriptApp.getService().getUrl();
