@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    .form-container {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    @media (max-width: 576px) {
+      body {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+  <div class="card shadow-sm form-container">
+    <div class="card-body">
+      <form id="metallForm">
+        <div class="mb-3">
+          <label for="metalType" class="form-label">Вид металла:</label>
+          <select id="metalType" class="form-select">
+            <? for (let item of data.metalType) { ?>
+              <option value="<?= item ?>"><?= item ?></option>
+            <? } ?>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="estimatedValue" class="form-label">Оценочная стоимость:</label>
+          <input type="number" id="estimatedValue" class="form-control" min="0" step="1" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="weight" class="form-label">Вес изделия:</label>
+          <input type="number" id="weight" class="form-control" min="0" step="1" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="category" class="form-label">Категория:</label>
+          <select id="category" class="form-select">
+            <? for (let item of data.category) { ?>
+              <option value="<?= item ?>"><?= item ?></option>
+            <? } ?>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="pledgeTerm" class="form-label">Срок залога:</label>
+          <select id="pledgeTerm" class="form-select">
+            <? for (let item of data.pledgeTerm) { ?>
+              <option value="<?= item ?>"><?= item ?></option>
+            <? } ?>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="returnProb" class="form-label">Вероятность возврата:</label>
+          <select id="returnProb" class="form-select">
+            <? for (let item of data.returnProb) { ?>
+              <option value="<?= item ?>"><?= item ?></option>
+            <? } ?>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="clientProfit" class="form-label">Доход по клиенту:</label>
+          <select id="clientProfit" class="form-select">
+            <? for (let item of data.clientProfit) { ?>
+              <option value="<?= item ?>"><?= item ?></option>
+            <? } ?>
+          </select>
+        </div>
+
+        <button type="button" onclick="submitFormMetall()" class="btn btn-primary w-100">Отправить</button>
+      </form>
+
+      <div id="result" class="mt-3 text-center fw-bold"></div>
+
+      <div class="text-center mt-4">
+        <a href="<?= baseUrl ?>?page=main" class="text-decoration-none text-primary">← В главное меню</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function submitFormMetall() {
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Загрузка...</span></div>';
+
+    const data = {
+      metalType: document.getElementById('metalType').value,
+      estimatedValue: document.getElementById('estimatedValue').value,
+      weight: document.getElementById('weight').value,
+      category: document.getElementById('category').value,
+      pledgeTerm: document.getElementById('pledgeTerm').value,
+      returnProb: document.getElementById('returnProb').value,
+      clientProfit: document.getElementById('clientProfit').value
+    };
+
+    google.script.run
+      .withSuccessHandler(showMessage)
+      .withFailureHandler(showError)
+      .processFormMetall(data);
+  }
+
+  function showMessage(message) {
+    const resultDiv = document.getElementById('result');
+    resultDiv.textContent = message;
+    resultDiv.classList.remove('text-danger');
+    resultDiv.classList.add('text-success');
+  }
+
+  function showError(error) {
+    const resultDiv = document.getElementById('result');
+    resultDiv.textContent = 'Ошибка: ' + error.message;
+    resultDiv.classList.remove('text-success');
+    resultDiv.classList.add('text-danger');
+  }
+</script>
+
+</body>
+</html>
