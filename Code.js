@@ -137,34 +137,11 @@ function processFormMetall(formData) {
 function cleanUpTempSheets() {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   const sheets = ss.getSheets();
-  const now = new Date();
 
   for (const sheet of sheets) {
     const name = sheet.getName();
     if (name.startsWith("Temp_")) {
-      const parts = name.split("_"); // ["Temp", "Technika", "20250614", "215459"]
-      if (parts.length === 4 || parts.length === 5) {
-        const dateStr = parts[2];
-        const timeStr = parts[3];
-
-        if (dateStr.length === 8 && timeStr.length === 6) {
-          const sheetTime = new Date(
-            `${dateStr.substring(0, 4)}-${dateStr.substring(
-              4,
-              6
-            )}-${dateStr.substring(6, 8)}T` +
-              `${timeStr.substring(0, 2)}:${timeStr.substring(
-                2,
-                4
-              )}:${timeStr.substring(4, 6)}`
-          );
-
-          const ageMinutes = (now.getTime() - sheetTime.getTime()) / 1000 / 60;
-          if (ageMinutes > 120) {
-            ss.deleteSheet(sheet);
-          }
-        }
-      }
+      ss.deleteSheet(sheet);
     }
   }
 }
