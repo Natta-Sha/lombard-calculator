@@ -25,12 +25,13 @@
               <form id="techForm">
                 <div class="mb-3">
                   <label for="condition" class="form-label">Состояние:</label>
-                  <select id="condition" class="form-select">
+                  <select id="condition" class="form-select" required>
                     <option value="">Выберите состояние</option>
                     <? for (let item of data.condition) { ?>
                     <option value="<?= item ?>"><?= item ?></option>
                     <? } ?>
                   </select>
+                  <div class="invalid-feedback">Обязательное поле</div>
                 </div>
 
                 <div class="mb-3">
@@ -43,52 +44,57 @@
                     step="1"
                     required
                   />
+                  <div class="invalid-feedback">Обязательное поле</div>
                 </div>
 
                 <div class="mb-3">
                   <label for="term" class="form-label"
                     >Срок залога / продажа:</label
                   >
-                  <select id="term" class="form-select">
+                  <select id="term" class="form-select" required>
                     <option value="">Выберите срок залога</option>
                     <? for (let item of data.term) { ?>
                     <option value="<?= item ?>"><?= item ?></option>
                     <? } ?>
                   </select>
+                  <div class="invalid-feedback">Обязательное поле</div>
                 </div>
 
                 <div class="mb-3">
                   <label for="returnProb" class="form-label"
                     >Вероятность возврата:</label
                   >
-                  <select id="returnProb" class="form-select">
+                  <select id="returnProb" class="form-select" required>
                     <option value="">Выберите вероятность возврата</option>
                     <? for (let item of data.returnProb) { ?>
                     <option value="<?= item ?>"><?= item ?></option>
                     <? } ?>
                   </select>
+                  <div class="invalid-feedback">Обязательное поле</div>
                 </div>
 
                 <div class="mb-3">
                   <label for="clientProfit" class="form-label"
                     >Доход по клиенту:</label
                   >
-                  <select id="clientProfit" class="form-select">
+                  <select id="clientProfit" class="form-select" required>
                     <option value="">Выберите доход по клиенту</option>
                     <? for (let item of data.clientProfit) { ?>
                     <option value="<?= item ?>"><?= item ?></option>
                     <? } ?>
                   </select>
+                  <div class="invalid-feedback">Обязательное поле</div>
                 </div>
 
                 <div class="mb-3">
                   <label for="complect" class="form-label">Комплектация:</label>
-                  <select id="complect" class="form-select">
+                  <select id="complect" class="form-select" required>
                     <option value="">Выберите комплектацию</option>
                     <? for (let item of data.complect) { ?>
                     <option value="<?= item ?>"><?= item ?></option>
                     <? } ?>
                   </select>
+                  <div class="invalid-feedback">Обязательное поле</div>
                 </div>
 
                 <button
@@ -122,6 +128,26 @@
 
     <script>
       function submitForm() {
+        // Сброс всех ошибок валидации
+        const form = document.getElementById("techForm");
+        const inputs = form.querySelectorAll(".form-control, .form-select");
+        inputs.forEach((input) => {
+          input.classList.remove("is-invalid");
+        });
+
+        // Проверка валидности формы
+        if (!form.checkValidity()) {
+          // Показать ошибки валидации
+          form.classList.add("was-validated");
+
+          // Найти первое невалидное поле и установить на него фокус
+          const firstInvalid = form.querySelector(":invalid");
+          if (firstInvalid) {
+            firstInvalid.focus();
+          }
+          return;
+        }
+
         const resultDiv = document.getElementById("result");
         resultDiv.innerHTML =
           '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Загрузка...</span></div>';
