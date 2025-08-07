@@ -26,6 +26,7 @@
                 <div class="mb-3">
                   <label for="metalType" class="form-label">Вид металла:</label>
                   <select id="metalType" class="form-select">
+                    <option value="">Выберите вид металла</option>
                     <? for (let item of data.metalType) { ?>
                     <option value="<?= item ?>"><?= item ?></option>
                     <? } ?>
@@ -61,6 +62,7 @@
                 <div class="mb-3">
                   <label for="category" class="form-label">Категория:</label>
                   <select id="category" class="form-select">
+                    <option value="">Выберите категорию</option>
                     <? for (let item of data.category) { ?>
                     <option value="<?= item ?>"><?= item ?></option>
                     <? } ?>
@@ -72,6 +74,7 @@
                     >Срок залога:</label
                   >
                   <select id="pledgeTerm" class="form-select">
+                    <option value="">Выберите срок залога</option>
                     <? for (let item of data.pledgeTerm) { ?>
                     <option value="<?= item ?>"><?= item ?></option>
                     <? } ?>
@@ -83,6 +86,7 @@
                     >Вероятность возврата:</label
                   >
                   <select id="returnProb" class="form-select">
+                    <option value="">Выберите вероятность возврата</option>
                     <? for (let item of data.returnProb) { ?>
                     <option value="<?= item ?>"><?= item ?></option>
                     <? } ?>
@@ -94,6 +98,7 @@
                     >Доход по клиенту:</label
                   >
                   <select id="clientProfit" class="form-select">
+                    <option value="">Выберите доход по клиенту</option>
                     <? for (let item of data.clientProfit) { ?>
                     <option value="<?= item ?>"><?= item ?></option>
                     <? } ?>
