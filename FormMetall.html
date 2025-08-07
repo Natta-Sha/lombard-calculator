@@ -52,14 +52,16 @@
                 <div class="mb-3">
                   <label for="weight" class="form-label">Вес изделия:</label>
                   <input
-                    type="number"
+                    type="text"
                     id="weight"
                     class="form-control"
-                    min="0"
-                    step="0.01"
+                    pattern="[0-9]*[.,]?[0-9]+"
+                    inputmode="decimal"
                     required
                   />
-                  <div class="invalid-feedback">Обязательное поле</div>
+                  <div class="invalid-feedback">
+                    Введите вес изделия (например: 1.5 или 2,25)
+                  </div>
                 </div>
 
                 <div class="mb-3">
@@ -142,6 +144,17 @@
     </div>
 
     <script>
+      // Очистка кастомной валидации при вводе в поле веса
+      document.addEventListener("DOMContentLoaded", function () {
+        const weightInput = document.getElementById("weight");
+        if (weightInput) {
+          weightInput.addEventListener("input", function () {
+            this.setCustomValidity("");
+            this.classList.remove("is-invalid");
+          });
+        }
+      });
+
       function submitFormMetall() {
         // Сброс всех ошибок валидации
         const form = document.getElementById("metallForm");
@@ -168,9 +181,30 @@
           '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Загрузка...</span></div>';
 
         // Обработка веса - замена запятой на точку для корректной работы с числами
-        let weightValue = document.getElementById("weight").value;
-        if (weightValue.includes(",")) {
-          weightValue = weightValue.replace(",", ".");
+        let weightValue = document.getElementById("weight").value.trim();
+        // Удаляем все пробелы и заменяем запятую на точку
+        weightValue = weightValue.replace(/\s/g, "").replace(",", ".");
+
+        // Проверяем, что это валидное число
+        if (weightValue && isNaN(parseFloat(weightValue))) {
+          document
+            .getElementById("weight")
+            .setCustomValidity(
+              "Введите корректное число (например: 1.5 или 2,25)"
+            );
+          document.getElementById("weight").classList.add("is-invalid");
+          document.getElementById("weight").focus();
+          return;
+        }
+
+        // Проверяем, что число положительное
+        if (weightValue && parseFloat(weightValue) <= 0) {
+          document
+            .getElementById("weight")
+            .setCustomValidity("Вес должен быть больше нуля");
+          document.getElementById("weight").classList.add("is-invalid");
+          document.getElementById("weight").focus();
+          return;
         }
 
         const data = {
