@@ -39,14 +39,16 @@
                     >Оценочная стоимость:</label
                   >
                   <input
-                    type="number"
+                    type="text"
                     id="estimatedValue"
                     class="form-control"
-                    min="0"
-                    step="1"
+                    pattern="[0-9]+"
+                    inputmode="numeric"
                     required
                   />
-                  <div class="invalid-feedback">Обязательное поле</div>
+                  <div class="invalid-feedback">
+                    Введите оценочную стоимость (только целые числа)
+                  </div>
                 </div>
 
                 <div class="mb-3">
@@ -144,11 +146,20 @@
     </div>
 
     <script>
-      // Очистка кастомной валидации при вводе в поле веса
+      // Очистка кастомной валидации при вводе в поля
       document.addEventListener("DOMContentLoaded", function () {
         const weightInput = document.getElementById("weight");
+        const estimatedValueInput = document.getElementById("estimatedValue");
+
         if (weightInput) {
           weightInput.addEventListener("input", function () {
+            this.setCustomValidity("");
+            this.classList.remove("is-invalid");
+          });
+        }
+
+        if (estimatedValueInput) {
+          estimatedValueInput.addEventListener("input", function () {
             this.setCustomValidity("");
             this.classList.remove("is-invalid");
           });
@@ -179,6 +190,32 @@
         const resultDiv = document.getElementById("result");
         resultDiv.innerHTML =
           '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Загрузка...</span></div>';
+
+        // Обработка оценочной стоимости - только целые числа
+        let estimatedValue = document
+          .getElementById("estimatedValue")
+          .value.trim();
+        estimatedValue = estimatedValue.replace(/\s/g, "");
+
+        // Проверяем, что это валидное целое число
+        if (estimatedValue && !/^\d+$/.test(estimatedValue)) {
+          document
+            .getElementById("estimatedValue")
+            .setCustomValidity("Введите целое число (например: 1000)");
+          document.getElementById("estimatedValue").classList.add("is-invalid");
+          document.getElementById("estimatedValue").focus();
+          return;
+        }
+
+        // Проверяем, что число положительное
+        if (estimatedValue && parseInt(estimatedValue) <= 0) {
+          document
+            .getElementById("estimatedValue")
+            .setCustomValidity("Оценочная стоимость должна быть больше нуля");
+          document.getElementById("estimatedValue").classList.add("is-invalid");
+          document.getElementById("estimatedValue").focus();
+          return;
+        }
 
         // Обработка веса - замена запятой на точку для корректной работы с числами
         let weightValue = document.getElementById("weight").value.trim();

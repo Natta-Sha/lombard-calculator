@@ -37,14 +37,16 @@
                 <div class="mb-3">
                   <label for="price" class="form-label">Цена в прайсе:</label>
                   <input
-                    type="number"
+                    type="text"
                     id="price"
                     class="form-control"
-                    min="0"
-                    step="1"
+                    pattern="[0-9]+"
+                    inputmode="numeric"
                     required
                   />
-                  <div class="invalid-feedback">Обязательное поле</div>
+                  <div class="invalid-feedback">
+                    Введите цену в прайсе (только целые числа)
+                  </div>
                 </div>
 
                 <div class="mb-3">
@@ -127,6 +129,17 @@
     </div>
 
     <script>
+      // Очистка кастомной валидации при вводе в поле цены
+      document.addEventListener("DOMContentLoaded", function () {
+        const priceInput = document.getElementById("price");
+        if (priceInput) {
+          priceInput.addEventListener("input", function () {
+            this.setCustomValidity("");
+            this.classList.remove("is-invalid");
+          });
+        }
+      });
+
       function submitForm() {
         // Сброс всех ошибок валидации
         const form = document.getElementById("techForm");
@@ -148,13 +161,37 @@
           return;
         }
 
+        // Обработка цены в прайсе - только целые числа
+        let priceValue = document.getElementById("price").value.trim();
+        priceValue = priceValue.replace(/\s/g, "");
+
+        // Проверяем, что это валидное целое число
+        if (priceValue && !/^\d+$/.test(priceValue)) {
+          document
+            .getElementById("price")
+            .setCustomValidity("Введите целое число (например: 1000)");
+          document.getElementById("price").classList.add("is-invalid");
+          document.getElementById("price").focus();
+          return;
+        }
+
+        // Проверяем, что число положительное
+        if (priceValue && parseInt(priceValue) <= 0) {
+          document
+            .getElementById("price")
+            .setCustomValidity("Цена должна быть больше нуля");
+          document.getElementById("price").classList.add("is-invalid");
+          document.getElementById("price").focus();
+          return;
+        }
+
         const resultDiv = document.getElementById("result");
         resultDiv.innerHTML =
           '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Загрузка...</span></div>';
 
         const data = {
           condition: document.getElementById("condition").value,
-          price: document.getElementById("price").value,
+          price: priceValue,
           term: document.getElementById("term").value,
           returnProb: document.getElementById("returnProb").value,
           clientProfit: document.getElementById("clientProfit").value,
