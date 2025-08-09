@@ -11,7 +11,7 @@ function getDropdownOptions(sheetName) {
   }
 
   return {
-    metalType: sheetName.includes("металл") ? getColumnValues(1) : null,
+    metalType: sheetName.includes("металл") ? getColumnValues(28) : null, // Столбец AB (28)
     category: sheetName.includes("металл") ? getColumnValues(2) : null,
     pledgeTerm: sheetName.includes("металл") ? getColumnValues(3) : null,
     returnProb: getColumnValues(sheetName.includes("металл") ? 4 : 7),
@@ -105,7 +105,7 @@ function processForm(formData) {
 // Обработка формы Металл
 function processFormMetall(formData) {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-  const baseSheet = ss.getSheetByName("Калькулятор металл");
+  const baseSheet = ss.getSheetByName("Copy of Калькулятор металл");
   if (!baseSheet) throw new Error('Лист "Калькулятор металл" не найден!');
 
   const tempSheet = baseSheet.copyTo(ss);
@@ -116,7 +116,6 @@ function processFormMetall(formData) {
 
   const values = [
     formData.metalType,
-    formData.estimatedValue,
     formData.weight,
     formData.category,
     formData.pledgeTerm,
