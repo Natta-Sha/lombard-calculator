@@ -11,7 +11,7 @@ function getDropdownOptions(sheetName) {
   }
 
   return {
-    metalType: sheetName.includes("металл") ? getColumnValues(1) : null,
+    metalType: sheetName.includes("металл") ? getColumnValues(28) : null, // Столбец AB (28)
     category: sheetName.includes("металл") ? getColumnValues(2) : null,
     pledgeTerm: sheetName.includes("металл") ? getColumnValues(3) : null,
     returnProb: getColumnValues(sheetName.includes("металл") ? 4 : 7),
@@ -114,18 +114,13 @@ function processFormMetall(formData) {
   ss.setActiveSheet(tempSheet);
   ss.moveActiveSheet(ss.getSheets().length); // в самый конец
 
-  const values = [
-    formData.metalType,
-    formData.estimatedValue,
-    formData.weight,
-    formData.category,
-    formData.pledgeTerm,
-    formData.returnProb,
-    formData.clientProfit,
-  ];
-  for (let i = 0; i < values.length; i++) {
-    tempSheet.getRange(`C${i + 2}`).setValue(values[i]);
-  }
+  // Записываем данные в соответствующие ячейки
+  tempSheet.getRange("C3").setValue(formData.metalType); // Проба металла в C3
+  tempSheet.getRange("C4").setValue(formData.weight); // Вес изделия в C4
+  tempSheet.getRange("C5").setValue(formData.category); // Категория в C5
+  tempSheet.getRange("C6").setValue(formData.pledgeTerm); // Срок залога в C6
+  tempSheet.getRange("C7").setValue(formData.returnProb); // Вероятность возврата в C7
+  tempSheet.getRange("C8").setValue(formData.clientProfit); // Доход по клиенту в C8
 
   SpreadsheetApp.flush();
   const result = tempSheet.getRange("C10").getDisplayValue();
