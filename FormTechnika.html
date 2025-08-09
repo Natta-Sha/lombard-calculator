@@ -12,6 +12,11 @@
         position: sticky;
         top: 1rem;
       }
+
+      .btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
     </style>
   </head>
   <body class="bg-light">
@@ -99,13 +104,25 @@
                   <div class="invalid-feedback">Обязательное поле</div>
                 </div>
 
-                <button
-                  type="button"
-                  onclick="submitForm()"
-                  class="btn btn-primary w-100"
-                >
-                  Сделать расчет
-                </button>
+                <div class="d-grid gap-2">
+                  <button
+                    type="button"
+                    id="submitBtn"
+                    onclick="submitForm()"
+                    class="btn btn-primary"
+                  >
+                    Сделать расчет
+                  </button>
+                  <button
+                    type="button"
+                    id="clearBtn"
+                    onclick="clearForm()"
+                    class="btn btn-success"
+                    style="display: none"
+                  >
+                    Очистить форму
+                  </button>
+                </div>
               </form>
 
               <div id="result" class="mt-3 text-center fw-bold"></div>
@@ -209,6 +226,12 @@
         resultDiv.textContent = message;
         resultDiv.classList.remove("text-danger");
         resultDiv.classList.add("text-success");
+
+        // Деактивируем поля формы и кнопку "Сделать расчет"
+        disableForm();
+
+        // Показываем кнопку "Очистить форму"
+        document.getElementById("clearBtn").style.display = "block";
       }
 
       function showError(error) {
@@ -216,6 +239,50 @@
         resultDiv.textContent = "Ошибка: " + error.message;
         resultDiv.classList.remove("text-success");
         resultDiv.classList.add("text-danger");
+      }
+
+      function disableForm() {
+        // Деактивируем все поля ввода
+        const inputs = document.querySelectorAll(
+          "#techForm .form-control, #techForm .form-select"
+        );
+        inputs.forEach((input) => {
+          input.disabled = true;
+        });
+
+        // Деактивируем кнопку "Сделать расчет"
+        document.getElementById("submitBtn").disabled = true;
+      }
+
+      function clearForm() {
+        // Очищаем все поля формы
+        const form = document.getElementById("techForm");
+        form.reset();
+
+        // Очищаем результат
+        const resultDiv = document.getElementById("result");
+        resultDiv.textContent = "";
+        resultDiv.classList.remove("text-success", "text-danger");
+
+        // Активируем все поля ввода
+        const inputs = document.querySelectorAll(
+          "#techForm .form-control, #techForm .form-select"
+        );
+        inputs.forEach((input) => {
+          input.disabled = false;
+        });
+
+        // Активируем кнопку "Сделать расчет"
+        document.getElementById("submitBtn").disabled = false;
+
+        // Скрываем кнопку "Очистить форму"
+        document.getElementById("clearBtn").style.display = "none";
+
+        // Сбрасываем валидацию
+        form.classList.remove("was-validated");
+        inputs.forEach((input) => {
+          input.classList.remove("is-invalid");
+        });
       }
     </script>
   </body>

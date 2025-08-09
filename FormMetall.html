@@ -12,6 +12,11 @@
         position: sticky;
         top: 1rem;
       }
+
+      .btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
     </style>
   </head>
   <body class="bg-light">
@@ -114,7 +119,7 @@
                     type="button"
                     id="clearBtn"
                     onclick="clearFormMetall()"
-                    class="btn btn-secondary"
+                    class="btn btn-success"
                     style="display: none"
                   >
                     Очистить форму
