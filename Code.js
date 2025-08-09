@@ -105,7 +105,7 @@ function processForm(formData) {
 // Обработка формы Металл
 function processFormMetall(formData) {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-  const baseSheet = ss.getSheetByName("Copy of Калькулятор металл");
+  const baseSheet = ss.getSheetByName("Калькулятор металл");
   if (!baseSheet) throw new Error('Лист "Калькулятор металл" не найден!');
 
   const tempSheet = baseSheet.copyTo(ss);
