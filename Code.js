@@ -114,17 +114,13 @@ function processFormMetall(formData) {
   ss.setActiveSheet(tempSheet);
   ss.moveActiveSheet(ss.getSheets().length); // в самый конец
 
-  const values = [
-    formData.metalType,
-    formData.weight,
-    formData.category,
-    formData.pledgeTerm,
-    formData.returnProb,
-    formData.clientProfit,
-  ];
-  for (let i = 0; i < values.length; i++) {
-    tempSheet.getRange(`C${i + 2}`).setValue(values[i]);
-  }
+  // Записываем данные в соответствующие ячейки
+  tempSheet.getRange("C3").setValue(formData.metalType); // Проба металла в C3
+  tempSheet.getRange("C4").setValue(formData.weight); // Вес изделия в C4
+  tempSheet.getRange("C5").setValue(formData.category); // Категория в C5
+  tempSheet.getRange("C6").setValue(formData.pledgeTerm); // Срок залога в C6
+  tempSheet.getRange("C7").setValue(formData.returnProb); // Вероятность возврата в C7
+  tempSheet.getRange("C8").setValue(formData.clientProfit); // Доход по клиенту в C8
 
   SpreadsheetApp.flush();
   const result = tempSheet.getRange("C10").getDisplayValue();
