@@ -43,3 +43,7 @@ cp ~/.clasprc_sloboda.json ~/.clasprc.json
 cd ~/projects/sloboda-webapp/
 clasp pull
 code .
+
+Или же:
+clasp logout
+и потом clasp login и создастся ссылка, по которой залогиниться в нужном аккаунте.
